@@ -23,10 +23,10 @@ const moviesSchema = new Schema({
         maxLength: 100
     },
     anio: {
-        type: number,
+        type: Number,
     },
     duracion : {
-        type: number ,
+        type: Number ,
     },
     imagen: {
         type: String

@@ -23,16 +23,16 @@ const employeesSchema = new Schema({
         maxLength: 100
     },
     direccion: {
-        type: string,
+        type: String,
     },
     puesto: {
-        type: string ,
+        type: String ,
     },
     fecha_contratacion: {
         type: Date,
     },
     salario : {
-        type: number
+        type: Number
     },
     activo :{
         type: Boolean
