@@ -1,7 +1,6 @@
 import express from "express";
 import multer from "multer";
 import moviesController from "../controllers/movies.Controllers.js";
-import moviesController from "../controllers/movies.Controllers.js";
 
 const router = express.Router();
 

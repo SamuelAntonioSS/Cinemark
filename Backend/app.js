@@ -4,6 +4,8 @@ import EmployeesRoutes from "./src/models/Employees.js";
 import customersRoutes from "./src/models/Customers.js";
 import registerEmployeesRoutes from "./src/routes/registerEmployees.js"
 import registerClientsRoutes from "./src/routes/registerClients.js";
+import passwordRecoveryRoutes from "./src/routes/passwordRecovery.js";
+import moviesRoutes from "./src/routes/movies.js";
 import cookieParser from "cookie-parser";
 
 
@@ -30,6 +32,8 @@ app.use ("/api/employees", EmployeesRoutes);
 app.use ("/api/customers", customersRoutes);
 app.use("/api/registerEmployeess", registerEmployeesRoutes);
 app.use("/api/registerClients",registerClientsRoutes );
+app.use("/api/passwordRecovery", passwordRecoveryRoutes);
+app.use("/api/movies", moviesRoutes)
 
 
 

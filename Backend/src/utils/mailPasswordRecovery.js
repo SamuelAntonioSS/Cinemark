@@ -1,39 +1,37 @@
-import nodemailer from "nodemailer"; //Enviar correo
-import { config } from "../config.js";
+import nodemailer from 'nodemailer';
+import { config } from '../config.js';
 
-
-//1- Configurar el transporter => ¿Quien lo envia?
+// 1- Configurar el transporter => ¿Quien lo envia?
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465, 
     secure: true,
     auth: {
-        user: config.email.email_user,
-        pass: config.email.email_pass
+        user: config.email.email_user, 
+        pass: config.email.email_pass  
     }
-})
+});
 
-//2- 
-
-const sendEmail = async (to, subject, text, html) =>{
+// 2- Función para enviar el correo manteniendo el nombre `sendCorreo`
+const sendCorreo = async (to, subject, text, html) => {
     try {
+        // Usamos el método sendMail de Nodemailer pero con el nombre de la función `sendCorreo`
         const info = await transporter.sendMail({
-            from: '"CineMark" <antonysanz06@gmail.com>',
-            to,
-            subject,
-            text,
-            html
+            from: '"CineMark" <antonysanz06@gmail.com>',  // Cambia esto con el correo desde el cual deseas enviar
+            to,                                            // Dirección del destinatario
+            subject,                                       // Asunto
+            text,                                          // Cuerpo en texto
+            html                                            // Cuerpo en HTML (opcional)
         });
-
+        console.log("Correo enviado: " + info.response);
         return info;
     } catch (error) {
-        console.log("Error sending email")
-        
+        console.log("Error sending email:", error);  // Imprimir el error detallado
+        throw new Error("Error sending email: " + error.message);
     }
-
 };
 
-//3- Función para generar el HTML del correo de recuperación de contraseña
+// 3- Función para generar el HTML del correo de recuperación de contraseña
 const HTMLRecoveryEmail = (code) => {
     return `
       <div style="font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: 0 auto;">
@@ -54,7 +52,7 @@ const HTMLRecoveryEmail = (code) => {
         </footer>
       </div>
     `;
-  };
-   
+};
 
-  export { sendEmail,HTMLRecoveryEmail };
+// Exportar las funciones
+export { sendCorreo, HTMLRecoveryEmail };

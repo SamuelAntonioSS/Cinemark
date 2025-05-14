@@ -40,14 +40,14 @@ registerClientsController.register = async (req, res) => {
         // Crear el token
         const tokenCode = jsonwebtoken.sign(
             //1 ¿Que vamos a guardar?
-            {email, verificationCode},
+            {correo, verificationCode},
             //2- Palabra secreta
             config.JWT.secret,
             //3- Cuando expira
             {expiresIn: "2h"}
         )
 
-        res.cookies("VerificationToken", tokenCode, {maxAge: 2*60*60*1000})
+        res.cookie("VerificationToken", tokenCode, {maxAge: 2*60*60*1000})
 
         // Enviar el correo electronico
         //1- Trasporter => Quien lo envia

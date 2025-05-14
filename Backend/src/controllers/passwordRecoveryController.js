@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs" //Encriptar
 import clientsModel from "../models/Customers.js";
 import employeeModel from "../models/Employees.js";
 
-import { HTMLRecoveryEmail, sendEmail } from "../utils/mailPasswordRecovery.js";
+import { HTMLRecoveryEmail, sendCorreo } from "../utils/mailPasswordRecovery.js";
 import { config } from "../config.js";
 
 
@@ -14,18 +14,18 @@ const passwordRecoveryController = {};
 
 
  passwordRecoveryController.requestCode = async (req, res) =>{
-    const {email} = req.body;
+    const {correo} = req.body;
 
     try {
         
         let userFound;
         let userType;
 
-        userFound = await clientsModel.findOne({email});
+        userFound = await clientsModel.findOne({correo});
         if (userFound) {
             userType = "client"
         } else {
-            userFound = await employeeModel.findOne({email});
+            userFound = await employeeModel.findOne({correo});
             userType = "employee";
         }
 
@@ -39,7 +39,7 @@ const passwordRecoveryController = {};
         // generar un token 
         const token = jsonwebtoken.sign(
             //1- ¿que voy a guardar?
-            {email, code, userType, verfied: false},
+            {correo, code, userType, verfied: false},
             //2- secret key 
             config.JWT.secret,
             //3- ¿cuando expira?
@@ -48,8 +48,8 @@ const passwordRecoveryController = {};
 
         res.cookie("tokenRecoveryCode", token, {maxAge: 25*60*1000})
 
-        await sendEmail(
-            email,
+        await sendCorreo(
+            correo,
             "Password recovery Code",
             `your verification code is ${code}`,
             HTMLRecoveryEmail(code)
@@ -83,7 +83,7 @@ passwordRecoveryController.verifyCode = async (req, res) =>{
         //Marcamos el token como verficado (si es correcto)
         const newToken = jsonwebtoken.sign(
             //1- ¿Que vamos a guardar?
-            {email: decoded.email,
+            {correo: decoded.correo,
                 code: decoded.code,
                 userType: decoded.userType,
                 verfied: true
@@ -127,13 +127,13 @@ passwordRecoveryController.newPassword = async (req, res) =>{
             //Guardamos la nueva contradeña en la base de datos
             if(decoded.userType === "client"){
                 user = await clientsModel.findOneAndUpdate(
-                    {email: decoded.email},
+                    {correo: decoded.correo},
                     {password: hashedPassword},
                     {new: true}
                 )
             }else if (decoded.userType === "employee"){
                 user = await employeeModel.findOneAndUpdate(
-                    {email: decoded.email},
+                    {correo: decoded.correo},
                     {password: hashedPassword},
                     {new: true}
                 )

@@ -1,4 +1,4 @@
-import blogModel from "../models/Movies.js";
+import moviesModel from "../models/Movies.js";
 import {v2 as cloudinary} from "cloudinary";
 
 import { config } from "../config.js";
@@ -24,8 +24,8 @@ moviesController.getAllPosts = async (req, res)=>{
 moviesController.createPost = async (req,res)=>{
     try {
         
-        const {titulo, descripcion} = req.body;
-        let imageUrl = ""
+        const {titulo, descripcion, director, genero, anio, duracion} = req.body;
+        let imagen = ""
 
         if(req.file){
             const result = await cloudinary.uploader.upload(
@@ -35,10 +35,10 @@ moviesController.createPost = async (req,res)=>{
                     allowed_formats: ["jpg", "png", "jpeg"]
                 }
             );
-            imageUrl = result.secure_url;
+            imagen = result.secure_url;
         }
 
-        const newPost = new blogModel({titulo, descripcion, director, genero, anio, duracion, image: imageUrl})
+        const newPost = new moviesModel({titulo, descripcion, director, genero, anio, duracion, imagen : imageUrl})
         newPost.save()
 
         res.json({message: "post saved mi rey"})
