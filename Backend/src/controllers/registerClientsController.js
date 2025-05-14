@@ -14,22 +14,22 @@ const registerClientsController = {};
 registerClientsController.register = async (req, res) => {
     //-1 Solicitar las cosa que vamos a guardar
     const {
-        nombre, correo, contrasenia, telefono, direccion, activo
+        nombre, correo, Contrasenia, telefono, direccion, activo
             } = req.body;
 
     try{
 
-        const existsClient = await clientsModel.findOne({email})
+        const existsClient = await clientsModel.findOne({correo})
         if(existsClient){
             return res.json({message: "Client already exists"})
         }
 
         // Encriptar la contraseña del empleado
-        const passwordHash = await bcryptjs.hash(password, 10)
+        const ContraseniadHash = await bcryptjs.hash(Contrasenia, 10)
 
         // Guardo al cliente en la base de datos
         const newClient = new clientsModel({
-            nombre, correo, contrasenia, telefono, direccion, activo
+            nombre, correo, Contrasenia, telefono, direccion, activo
         });
 
         await newClient.save();
@@ -65,7 +65,7 @@ registerClientsController.register = async (req, res) => {
 
             from: config.email.email_user,
             // ¿quien lo recibe?
-            to: email,
+            to: correo,
             // Asunto
             subject: "Verificacion de correo",
             // Cuerpo del correo electronico
@@ -97,7 +97,7 @@ registerClientsController.verifyCodeEmail = async (req, res) => {
     try{
 
         const decoded = jsonwebtoken.verify(token, config.JWT.secret)
-        const {email, verificationCode: storedCode } = decoded
+        const {correo, verificationCode: storedCode } = decoded
 
         //Comparar el código que enviamos al correo 
         //Con el que el usuario escribe
@@ -106,7 +106,7 @@ registerClientsController.verifyCodeEmail = async (req, res) => {
         }
 
         //Cambiamos el esatdo de "isverified a true"
-        const client = await clientsModel.findOne({email});
+        const client = await clientsModel.findOne({correo});
         client.isVerified = true;
         await client.save();
 

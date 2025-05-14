@@ -14,16 +14,16 @@ registerEmployeessController.register = async (req, res) => {
 
     try{
         // Verifica,os si l empleado ya existe
-        const existEmployee = await Employees.findOne({email});
+        const existEmployee = await Employees.findOne({correo});
         if(existEmployee){
             return res.json({message: "Employee already exists"});
         }
 
         // Hashear o encriptar la contraseña
-        const passwordHash = await brcryptjs.hash(password, 15);
+        const contraseniadHash = await brcryptjs.hash(contrasenia, 15);
 
         // Guardamos el empleado en la base de datos
-        const newEmployee = new Employees({name,
+        const newEmployee = new Employees({
             nombre, correo, contrasenia, telefono, direccion, puesto, fecha_contratacion, salario, activo});
 
              await newEmployee.save();
